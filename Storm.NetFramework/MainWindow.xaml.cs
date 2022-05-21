@@ -550,7 +550,7 @@ namespace Storm
             }
             catch (Exception error)
             {
-                System.Windows.MessageBox.Show(error.Message, "Ну умница, ты всё сломал(a), иди к разработчику сие чуда (3-42-66)", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(error.Message, "Ну умница, ты всё сломал(a), иди к разработчику сие чуда ", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
