@@ -1,0 +1,1049 @@
+﻿<Window x:Class="Storm.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Storm"
+        xmlns:local1="clr-namespace:Watermark"
+        xmlns:local2="clr-namespace:Storm.NetFramework" d:DataContext="{d:DesignInstance Type=local2:OneProject}"
+        mc:Ignorable="d"
+        Title="ss" Height="600" Width="1000" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged">
+    <Window.Resources>
+        <SolidColorBrush x:Key="brushWatermarkBackground" Color="White"/>
+        <SolidColorBrush x:Key="brushWatermarkForeground" Color="Gray"/>
+        <SolidColorBrush x:Key="brushWatermarkBorder" Color="Indigo"/>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <local1:Watermark x:Key="Watermark"/>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="CenterAlignmentCellStyle">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DatePickerForBirth" TargetType="DatePicker" BasedOn="{StaticResource {x:Type DatePicker}}">
+            <Setter Property="local:DatePickerWatermark.Watermark" Value="Выберите дату рождения"/>
+        </Style>
+
+        <Style x:Key="DatePickerForIssue" TargetType="DatePicker" BasedOn="{StaticResource {x:Type DatePicker}}">
+            <Setter Property="local:DatePickerWatermark.Watermark" Value="Выберите дату выдачи паспорта"/>
+        </Style>
+
+        <Style x:Key="DataPickerForExpire" TargetType="DatePicker" BasedOn="{StaticResource {x:Type DatePicker}}">
+            <Setter Property="local:DatePickerWatermark.Watermark" Value="Выберите дату окончания действия"/>
+        </Style>
+
+        <Style x:Key="DataPickerForArrival" TargetType="DatePicker" BasedOn="{StaticResource {x:Type DatePicker}}">
+            <Setter Property="local:DatePickerWatermark.Watermark" Value="Выберите дату прибытия в страну"/>
+        </Style>
+
+        <Style x:Key="EntryFieldStyle" TargetType="Grid">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="20,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="#FFE6E6E6"  Expander.Collapsed="Grid_Collapsed" Expander.Expanded="Grid_Expanded">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="43" Name="GridColumnInput"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*" Name="GridColumnSearch" MinWidth="43"/>
+        </Grid.ColumnDefinitions>
+        <Expander Margin="10,10,10,10" ExpandDirection="Left" FlowDirection="RightToLeft" >
+            <Expander.Header>
+                <TextBlock Name="ExpanderHeader" Text="  ОТКРЫТЬ ВВОД / РЕДАКТИРОВАНИЕ" FontWeight="Bold" TextWrapping="Wrap" FontStyle="Normal" FontStretch="ExtraCondensed" >
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="90"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Expander.Header>
+            <TabControl Name="TabControl" Background="#FFE6E6E6"  Margin="0,0,5,0" Grid.RowSpan="3">
+                <TabItem Header="Ручной">
+                    <StackPanel Height="Auto">
+                        <ScrollViewer Name="scrollView" FlowDirection="LeftToRight" VerticalScrollBarVisibility="Visible" CanContentScroll="True" Height="500">
+                            <StackPanel Height="Auto">
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Text="Персональные данные" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Width="Auto" Margin="5,2" Text="Имя Фамилия (обязательное поле)" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Name" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Name" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Name" Background="Transparent" MaxLength="254"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Пол" Margin="7,0,0,0"/>
+                                    <ComboBox Text="--- Не выбран ---" IsEditable="True" Name="GenderComboBox" ItemsSource="{Binding}" VerticalContentAlignment="Top" Grid.Column="1" Margin="0,0,0,7" />
+                                    <DatePicker Style="{StaticResource DatePickerForBirth}" Name="DateOfBirth" Grid.Column="3" Margin="0,0,15,7" />
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Национальность" Grid.ColumnSpan="2" Margin="7,1,137,-1"/>
+                                    <ComboBox Name="NationalComboBox" Text="--- Не выбран ---" IsEditable="True" ItemsSource="{Binding}" Margin="149,1,15,3" VerticalContentAlignment="Top" Grid.ColumnSpan="2"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+                                <GroupBox Header="Удостоверение личности" Height="200" Margin="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="110*"/>
+                                            <ColumnDefinition Width="85"/>
+                                            <ColumnDefinition Width="111*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="35"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Margin="5,6,5,6" Grid.Column="3" FontWeight="Normal" Name="TextBoxSerialNumberOfDocumentAddOrEdit" MaxLength="255"/>
+                                        <Label Content="Серия/номер" FontWeight="Normal" Margin="0,2,0,2" Grid.Column="2"/>
+                                        <Label Content="Выдан"  VerticalContentAlignment="Center" Grid.Row="1" FontWeight="Normal" Margin="0,2,0,8"/>
+                                        <Label Content="Срок действия" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="2" FontWeight="Normal" Margin="0,0,110,5" Grid.ColumnSpan="2"/>
+                                        <DatePicker Grid.Column="1" Margin="5,5,5,7" Grid.Row="1" FontWeight="Normal" Name="DatePickerDocumentFrom"/>
+                                        <DatePicker Grid.Column="3" Margin="5,5,5,7" Grid.Row="1" FontWeight="Normal" Name="DatePickerDocumentTo"/>
+                                        <DataGrid Name="DataGridAddOrEditDocument" Grid.Row="3" Grid.ColumnSpan="4" Margin="4,0,5,0" FontWeight="Normal" AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True" >
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Тип" Binding ="{Binding Path=DocumentType}" MinWidth="40" Width="*"/>
+                                                <DataGridTextColumn Header="Серия/Номер" Binding ="{Binding Path=Serial}" MinWidth="85" Width="*"/>
+                                                <DataGridTextColumn Header="С" ElementStyle="{StaticResource ResourceKey=CenterAlignmentCellStyle}" Binding ="{Binding Path=DateFrom, StringFormat=\{0:dd.MM.yyyy\}}" MinWidth="80" CanUserResize="False"/>
+                                                <DataGridTextColumn Header="По" ElementStyle="{StaticResource ResourceKey=CenterAlignmentCellStyle}" Binding ="{Binding Path=DateTo, StringFormat=\{0:dd.MM.yyyy\}}" MinWidth="80" CanUserResize="False"/>
+                                                <DataGridTemplateColumn Header="Удалить" MinWidth="55" CanUserResize="False">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Button Margin="15,0,5,0" Width="21" Height="19" Tag="{Binding ElementName=DataGridAddOrEditDocument, Path=SelectedValue.ID}" Click="DeleteRecordInDocumentAddOrEdit_Click" ToolTip="Удалить удостоверение личности">
+                                                                    <StackPanel>
+                                                                        <Image Margin="-1,-1,0,0" Source=".\Delete.png"/>
+                                                                    </StackPanel>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                            <DataGrid.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Удалить" Click="DeleteRecordInDocumentAddOrEdit_Click">
+                                                        <MenuItem.Icon>
+                                                            <Image Height="20" Width="18" Margin="2,-1,5,0" Source=".\Delete.png"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </DataGrid.ContextMenu>
+
+                                        </DataGrid>
+                                        <Label Content="Тип" Grid.Column="0" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" Width="53" FontWeight="Normal" Grid.ColumnSpan="2" Height="25"/>
+                                        <ComboBox Text="--- Не выбран ---" IsEditable="True" Name="ComboBoxDocumentType" Grid.Column="1" Margin="5,0,5,0" VerticalAlignment="Center" ItemsSource="{Binding}" FontWeight="Normal" Height="21" SelectionChanged="ComboBoxDocumentType_SelectionChanged"/>
+                                        <Button Content="Добавить удостоверение личности " Margin="4,3,5,0" Grid.Row="2" VerticalAlignment="Top" Grid.ColumnSpan="4" Height="20" Name="ButtonDocumentAdd" Click="ButtonDocumentAdd_Click" IsEnabled="False"/>
+                                    </Grid>
+                                </GroupBox>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Группа крови" Margin="13,0,131,0" Grid.ColumnSpan="2"/>
+                                    <ComboBox Margin="149,1,15,3" IsEditable="True" Name ="Blood" VerticalContentAlignment="Top" Grid.ColumnSpan="2">
+                                        <ComboBoxItem Content="1 +"/>
+                                        <ComboBoxItem Content="1 -"/>
+                                        <ComboBoxItem Content="2 +"/>
+                                        <ComboBoxItem Content="2 -"/>
+                                        <ComboBoxItem Content="3 +"/>
+                                        <ComboBoxItem Content="3 -"/>
+                                        <ComboBoxItem Content="4 +"/>
+                                        <ComboBoxItem Content="4 -"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25*"/>
+                                        <ColumnDefinition Width="301*"/>
+                                    </Grid.ColumnDefinitions>
+                                </Grid>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Вес (кг)" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Weight" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Weight" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Weight"  Background="Transparent" PreviewTextInput="WeightTextInput" PreviewKeyDown="Weight_PreviewKeyDown"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Здоровье" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Health" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Health" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Health"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Семейное положение" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="MaritalStatus" Path="Text.IsEmpty" />
+                                                <Binding ElementName="MaritalStatus" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="MaritalStatus"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Дети" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Children" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Children" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Children"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Национальный день" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="NationalDay" Path="Text.IsEmpty" />
+                                                <Binding ElementName="NationalDay" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="NationalDay"  Background="Transparent"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Уголовные преследования" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="CriminalProsecution" Path="Text.IsEmpty" />
+                                                <Binding ElementName="CriminalProsecution" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="CriminalProsecution"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Участие в военных конфликтах" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="MilitaryConflicts" Path="Text.IsEmpty" />
+                                                <Binding ElementName="MilitaryConflicts" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="MilitaryConflicts"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Заметки" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Remarks" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Remarks" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Remarks"  Background="Transparent" MaxLength="1000"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Text="Образование" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Место учебы" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="University" Path="Text.IsEmpty" />
+                                                <Binding ElementName="University" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="University"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Факультет/Направление" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Faculty" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Faculty" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Faculty"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Уровень образования" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="EducationStatus" Path="Text.IsEmpty" />
+                                                <Binding ElementName="EducationStatus" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="EducationStatus"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Text="Владение иностранными языками" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+                                <Grid Width="Auto" Height="10"/>
+
+                                <GroupBox Header="Владение языками" FontWeight="Bold" Width="Auto" Margin="5">
+                                    <Grid Width="Auto"  Height="200" Margin="0,0,-2,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="31"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Text="--- Не выбран ---" IsEditable="True" Name="ComboBoxLanguage" Margin="2,5,10,5" ItemsSource="{Binding}" FontWeight="Normal" SelectionChanged="ComboBoxLanguage_SelectionChanged" />
+                                        <Button Content="Добавить язык" Name="ButtonLanguageAdd"  IsEnabled="False" Grid.Column="1" Margin="10,5,5,5" FontWeight="Bold" Click="ButtonLanguageAdd_Click"></Button>
+                                        <DataGrid Name="DataGridAddOrDeleteLanguage" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,9,5,0" FontWeight="Normal" AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Язык" Binding ="{Binding Path=Language}" MinWidth="40" Width="*"/>
+                                                <DataGridTemplateColumn Header="Удалить" MinWidth="55" CanUserResize="False">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Button Margin="15,0,5,0" Width="21" Height="19" Tag="{Binding ElementName=DataGridAddOrDeleteLanguage, Path=SelectedValue.IdLanguage}" Click="DeleteRecordInLanguagesAddOrDelete_Click" ToolTip="Удалить иностранный язык">
+                                                                    <StackPanel>
+                                                                        <Image Margin="-1,-1,0,0" Source=".\Delete.png"/>
+                                                                    </StackPanel>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                            <DataGrid.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Удалить" Click="DeleteRecordInLanguagesAddOrDelete_Click">
+                                                        <MenuItem.Icon>
+                                                            <Image Height="20" Width="18" Margin="2,-1,5,0" Source=".\Delete.png"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </DataGrid.ContextMenu>
+                                        </DataGrid>
+                                    </Grid>
+                                </GroupBox>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Name="arrival_information" Text="Информация о приезде" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="30">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <DatePicker Style="{StaticResource DataPickerForArrival}" Name="ArrivalDate" Grid.Column="1"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Страна пребывания" Grid.ColumnSpan="2" Margin="13,0,131,0"/>
+                                    <ComboBox Name="HostCountryComboBox" Text="--- Не выбран ---" IsEditable="True" ItemsSource="{Binding}" Margin="149,1,15,3" VerticalContentAlignment="Top" Grid.ColumnSpan="2"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Место проживания" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="HostPlace" Path="Text.IsEmpty" />
+                                                <Binding ElementName="HostPlace" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="HostPlace"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Цель визита" Grid.ColumnSpan="2" Margin="13,0,131,0"/>
+                                    <ComboBox Name="PurposeOfStayComboBox" Text="--- Не выбран ---" IsEditable="True" ItemsSource="{Binding}" Margin="149,1,15,3" VerticalContentAlignment="Top" Grid.ColumnSpan="2"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <GroupBox Header="Хобби" FontWeight="Bold" Width="Auto" Margin="5">
+                                    <Grid Width="Auto"  Height="200" Margin="0,0,-2,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="31"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Text="--- Не выбран ---" IsEditable="True" Name="ComboBoxHobby" Margin="2,5,10,5" ItemsSource="{Binding}" FontWeight="Normal" SelectionChanged="ComboBoxHobby_SelectionChanged" />
+                                        <Button Content="Добавить хобби" Name="ButtonHobbyAdd"  IsEnabled="False" Grid.Column="1" Margin="10,5,5,5" FontWeight="Bold" Click="ButtonHobbyAdd_Click"></Button>
+                                        <DataGrid Name="DataGridAddOrDeleteHobby" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,9,5,0" FontWeight="Normal" AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Хобби" Binding ="{Binding Path=NameOfHobby}" MinWidth="40" Width="*"/>
+                                                <DataGridTemplateColumn Header="Удалить" MinWidth="55" CanUserResize="False">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Button Margin="15,0,5,0" Width="21" Height="19" Tag="{Binding ElementName=DataGridAddOrDeleteHobby, Path=SelectedValue.IdHobby}" Click="DeleteRecordInHobbyAddOrDelete_Click" ToolTip="Удалить хобби">
+                                                                    <StackPanel>
+                                                                        <Image Margin="-1,-1,0,0" Source=".\Delete.png"/>
+                                                                    </StackPanel>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                            <DataGrid.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Удалить" Click="DeleteRecordInHobbyAddOrDelete_Click">
+                                                        <MenuItem.Icon>
+                                                            <Image Height="20" Width="18" Margin="2,-1,5,0" Source=".\Delete.png"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </DataGrid.ContextMenu>
+                                        </DataGrid>
+                                    </Grid>
+                                </GroupBox>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Text="Места работы" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Название организации" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="NameOfCompany" Path="Text.IsEmpty" />
+                                                <Binding ElementName="NameOfCompany" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="NameOfCompany"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Посольство" Grid.ColumnSpan="2" Margin="13,0,117,0"/>
+                                    <ComboBox Name="EmbassyComboBox" Text="--- Не выбран ---" IsEditable="True" ItemsSource="{Binding}" Margin="149,1,15,3" VerticalContentAlignment="Top" Grid.ColumnSpan="2"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Отдел/Департамент/Направление" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Department" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Department" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Department"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Должность" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Post" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Post" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Post"  Background="Transparent" MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Воинское звание (если оно есть)" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Rank" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Rank" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Rank"  Background="Transparent"  MaxLength="255"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Часы работы" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="WorkingHours" Path="Text.IsEmpty" />
+                                                <Binding ElementName="WorkingHours" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="WorkingHours"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Номер/факс" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Telephone" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Telephone" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Telephone"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Электронная почта" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Email" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Email" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Email"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Адрес" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="Address" Path="Text.IsEmpty" />
+                                                <Binding ElementName="Address" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="Address"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="20">
+                                    <Button Content="Добавить место работы"  Name="ButtonWorkplaceAdd" Click="ButtonWorkplaceAdd_Click" IsEnabled="True" Margin="19,0"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <DataGrid Name="DataGridAddOrDeleteWorkplace" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,9,5,0" FontWeight="Normal" AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Организация" Binding ="{Binding Path=NameOfCompany}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Посольство" Binding ="{Binding Path=Embassy}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Отдел" Binding ="{Binding Path=Department}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Должность" Binding ="{Binding Path=Position}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Звание" Binding ="{Binding Path=Rank}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Часы работы" Binding ="{Binding Path=Hours}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Телефон" Binding ="{Binding Path=Telephone}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Почта" Binding ="{Binding Path=Email}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Адрес" Binding ="{Binding Path=Address}" MinWidth="40" Width="*"/>
+                                        <DataGridTemplateColumn Header="Удалить" MinWidth="55" CanUserResize="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Margin="15,0,5,0" Width="21" Height="19" Tag="{Binding ElementName=DataGridAddOrDeleteWorkplace, Path=SelectedValue.ID}" Click="DeleteRecordInWorkplacesAddOrDelete_Click" ToolTip="Удалить иностранный язык">
+                                                            <StackPanel>
+                                                                <Image Margin="-1,-1,0,0" Source=".\Delete.png"/>
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Удалить" Click="DeleteRecordInWorkplacesAddOrDelete_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Height="20" Width="18" Margin="2,-1,5,0" Source=".\Delete.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                </DataGrid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Text="Информация о проектах" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+
+                                <Grid Width="Auto" Height="30" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Место работы" Margin="11,0,0,0"/>
+                                    <ComboBox Text="--- Не выбран ---" IsEditable="True" Name="WorkplaceChosenComboBox" ItemsSource="{Binding}" VerticalContentAlignment="Top" Grid.Column="1" Margin="15,2" />
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Название проекта" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="NameOfProject" Path="Text.IsEmpty" />
+                                                <Binding ElementName="NameOfProject" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="NameOfProject"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Описание проекта" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="ProjectDescription" Path="Text.IsEmpty" />
+                                                <Binding ElementName="ProjectDescription" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="ProjectDescription"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}"  Width="Auto" Height="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Margin="5,2" Text="Детали проекта" Foreground="{StaticResource brushWatermarkForeground}" >
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource Watermark}">
+                                                <Binding ElementName="ProjectDetails" Path="Text.IsEmpty" />
+                                                <Binding ElementName="ProjectDetails" Path="IsFocused" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <TextBox Grid.Column="1" Name="ProjectDetails"  Background="Transparent" MaxLength="500"/>
+                                </Grid>
+                                
+                                <Grid Width="Auto" Height="10"/>
+                                
+                                <Grid Width="Auto" Height="20">
+                                    <Button Content="Добавить проект"  Name="ButtonProjectAdd" Click="ButtonProjectAdd_Click" IsEnabled="True" Margin="19,0"/>
+                                </Grid>
+
+                                <DataGrid Name="DataGridAddOrDeleteProject" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,9,5,0" FontWeight="Normal" AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Название проекта" Binding ="{Binding Path=NameOfProject}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Описание проекта" Binding ="{Binding Path=Description}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Детали проекта" Binding ="{Binding Path=ProjectDetails}" MinWidth="40" Width="*"/>
+                                        <DataGridTextColumn Header="Место работы" Binding="{Binding Path=Workplace}" MinWidth="40" Width="*"/>
+                                        <DataGridTemplateColumn Header="Удалить" MinWidth="55" CanUserResize="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Margin="15,0,5,0" Width="21" Height="19" Tag="{Binding ElementName=DataGridAddOrDeleteProject, Path=SelectedValue.ID}" Click="DeleteRecordInProjectAddOrDelete_Click" ToolTip="Удалить иностранный язык">
+                                                            <StackPanel>
+                                                                <Image Margin="-1,-1,0,0" Source=".\Delete.png"/>
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Удалить" Click="DeleteRecordInProjectAddOrDelete_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Height="20" Width="18" Margin="2,-1,5,0" Source=".\Delete.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                </DataGrid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Grid Width="Auto" Height="30">
+                                    <TextBox Text="Дополнительные файлы" TextAlignment="Center" IsEnabled="False"></TextBox>
+                                </Grid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                                <Button Content="Добавить файлы" Name="ButtonBrowse" Click="ButtonBrowse_Click" IsEnabled="True" Margin="19,0"/>
+
+                                <DataGrid Name="DataGridAddOrDeleteFile" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,9,5,0" FontWeight="Normal" AutoGenerateColumns="False" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Полное название файла" Binding ="{Binding Path=FileName}" MinWidth="40" Width="*"/>
+                                        <DataGridTemplateColumn Header="Удалить" MinWidth="55" CanUserResize="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Margin="15,0,5,0" Width="21" Height="19" Tag="{Binding ElementName=DataGridAddOrDeleteFile, Path=SelectedValue.IdFile}" Click="DeleteRecordInFilesAddOrDelete_Click" ToolTip="Удалить иностранный язык">
+                                                            <StackPanel>
+                                                                <Image Margin="-1,-1,0,0" Source=".\Delete.png"/>
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Удалить" Click="DeleteRecordInFilesAddOrDelete_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Height="20" Width="18" Margin="2,-1,5,0" Source=".\Delete.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                </DataGrid>
+
+                                <Grid Width="Auto" Height="10"/>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Grid Background="#FFE5E5E5" Height="20">
+                            <Button Content="Внести в базу" Click="InsertButton" Margin="20,0,0,0">
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </TabItem>
+                
+                <TabItem Header="Авто">
+                    <Grid Background="#FFE5E5E5">
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Словари">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="122"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Выберите словарь" VerticalContentAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="12" Margin="5,0,6,0" Height="26" Grid.Column="2"/>
+                        <ComboBox Name="ComboBoxDict" Grid.Column="1" VerticalAlignment="Center" FontWeight="Normal" Margin="10,0,10,0" SelectionChanged="ComboBoxDict_SelectionChanged" FontSize="12" Height="22" FlowDirection="LeftToRight">
+                            <ComboBoxItem>Национальность</ComboBoxItem>
+                            <ComboBoxItem>Посольство</ComboBoxItem>
+                            <ComboBoxItem>Страна пребывания</ComboBoxItem>
+                            <ComboBoxItem>Цель прибытия</ComboBoxItem>
+                            <ComboBoxItem>Владение языками</ComboBoxItem>
+                            <ComboBoxItem>Пол</ComboBoxItem>
+                            <ComboBoxItem>Хобби</ComboBoxItem>
+                            <ComboBoxItem>Тип документа</ComboBoxItem>
+                        </ComboBox>
+                        <Button Name="ButtonTermAdd" Click="ButtonTermAdd_Click" Content="Добавить" Margin="10,6,0,7" FontWeight="Normal" ToolTip="Добавить термин в словарь" FontSize="12" IsEnabled="False"/>
+                        <DataGrid Name="DataGridDict" Margin="10" Grid.Row="1" Grid.ColumnSpan="3" FontWeight="Normal"  HeadersVisibility="All" SelectionMode="Single" IsReadOnly="True" CanUserAddRows="False" local2:DataGridBehavior.DisplayRowNumber="True" AutoGenerateColumns="False" FontSize="12" FlowDirection="LeftToRight">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Термин" Binding ="{Binding Path=Term}" MinWidth="220" Width="*"/>
+                                <DataGridTemplateColumn Header="Действия" Width="65" MinWidth="65" CanUserResize="False">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Margin="5,0,5,0" Width="20" Height="18" Tag="{Binding ElementName=DataGridDict, Path=SelectedValue.ID}" Click="EditRecord_Click" ToolTip="Редактировать термин">
+                                                    <StackPanel>
+                                                        <Image Margin="-1,-1,0,0" Source="Edit.png"/>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Margin="5,0,5,0" Width="20" Height="18" Tag="{Binding ElementName=DataGridDict, Path=SelectedValue.ID}" Click="DeleteRecord_Click" ToolTip="Удалить термин из словаря">
+                                                    <StackPanel>
+                                                        <Image Margin="-1,-1,0,0" Source="Delete.png"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Редактировать" Click="EditRecord_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="Edit.png" Height="20" Width="18" Margin="2,-1,5,0" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Удалить" Click="DeleteRecord_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="Delete.png" Height="20" Width="18" Margin="2,-1,5,0" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Expander>
+        <GridSplitter Background="#FFB0B0B0" Name="GridSplitter" IsEnabled="True" Grid.Column="1" Height="Auto" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch"/>
+
+        <Grid Grid.Column="2" Background="#FFE6E6E6"  Margin="10,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="136"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+
+            <DataGrid Name="GridMain" Margin="0,4,0,10" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" FontSize="16" FontFamily="Microsoft JhengHei">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Открыть все связанные файлы" Name="cmOpenAll" />
+                        <Separator />
+                        <MenuItem Header="Открыть отчет" Name="cmOpenOutcome" Click="cmOpenOutcome_Click" />
+                        <Separator />
+                        <MenuItem Header="Удалить выбранное" Name="cmDelete"  Click="cmDelete_Click"/>
+                        <MenuItem Header="Изменить выбранное" Name="cmChange" Click="cmUpdate_Click" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ФИО"  Binding ="{Binding Path=Name_of_foreigner}"/>
+                    <DataGridTextColumn Header="Дата рождения"  Binding ="{Binding Path=Birth_date}"/>
+                    <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=Serial_number_of_document}"/>
+                    <DataGridTextColumn Header="Страна пребывания" Binding="{Binding Path=Host_country}"/>
+                    <DataGridTextColumn Header="Пол" Binding="{Binding Path=Gender}"/>
+                    <DataGridTextColumn Header="Место проживания" Binding="{Binding Path=Place_of_stay}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid  Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45*"/>
+                    <RowDefinition Height="92*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="190"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Поиск" Grid.Column="1" Margin="54,43,32,0" VerticalAlignment="Top" Height="30" Click="SearchButton" Grid.Row="1"/>
+                <TextBox Name="SearchTextBox" Margin="31,44,178,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Grid.Row="1" Grid.ColumnSpan="2"/>
+                <GroupBox Header="Фильтрация" Margin="6,4,6,67" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="104"/>
+                            <ColumnDefinition Width="151*"/>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="185*"/>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="185*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Цель прибытия" Margin="0,5,9,10"/>
+                        <ComboBox Name="ComboBoxFilterPurpose" Grid.Column="1" Margin="4,6,8,14" ItemsSource="{Binding}">
+                        </ComboBox>
+                        <Label Content="Страна пребывания" Grid.Column="2" Margin="10,5,10,10"/>
+                        <ComboBox Name="FilteredHostCountryComboBox" ItemsSource="{Binding}" Grid.Column="3" Margin="8,6,12,13">
+                        </ComboBox>
+                        <Label Content="Национальность" Grid.Column="4" Margin="11,5,9,10"/>
+                        <ComboBox Name="FilteredNationalityComboBox" ItemsSource="{Binding}" Grid.Column="5" Margin="7,6,13,13">
+                        </ComboBox>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

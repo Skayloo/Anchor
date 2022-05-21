@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Storm" Class="ContextDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=192.168.174.128;Initial Catalog=Storm;User ID=sa" SettingsObjectName="Storm.NetFramework.Properties.Settings" SettingsPropertyName="StormConnectionString2" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.arrival" Member="arrival">
+    <Type Name="arrival">
+      <Column Name="id_arrival" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="date_of_arrival" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="place_of_stay" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="purposeid_purpose" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="host_countryid_host_country" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="arrival_arrival_foreigners" Member="arrival_foreigners" ThisKey="id_arrival" OtherKey="id_arrival" Type="arrival_foreigners" />
+      <Association Name="arrival_workplace" Member="workplace" ThisKey="id_arrival" OtherKey="id_arrival" Type="workplace" />
+      <Association Name="host_country_arrival" Member="host_country" ThisKey="host_countryid_host_country" OtherKey="id_host_country" Type="host_country" IsForeignKey="true" />
+      <Association Name="purpose_arrival" Member="purpose" ThisKey="purposeid_purpose" OtherKey="id_purpose" Type="purpose" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.workplace_foreigners" Member="workplace_foreigners">
+    <Type Name="workplace_foreigners">
+      <Column Name="id_workplace_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_workplace" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="foreigners_workplace_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+      <Association Name="workplace_workplace_foreigners" Member="workplace" ThisKey="id_workplace" OtherKey="id_workplace" Type="workplace" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.arrival_foreigners" Member="arrival_foreigners">
+    <Type Name="arrival_foreigners">
+      <Column Name="id_arrival_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_arrival" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="arrival_arrival_foreigners" Member="arrival" ThisKey="id_arrival" OtherKey="id_arrival" Type="arrival" IsForeignKey="true" />
+      <Association Name="foreigners_arrival_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.document_type" Member="document_type">
+    <Type Name="document_type">
+      <Column Name="id_doctype" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_document_type" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="document_type_identity_document" Member="identity_document" ThisKey="id_doctype" OtherKey="document_typeid_doctype" Type="identity_document" />
+    </Type>
+  </Table>
+  <Table Name="dbo.education" Member="education">
+    <Type Name="education">
+      <Column Name="id_education" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="place_of_study" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="faculty" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="training_level" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="education_education_foreigners" Member="education_foreigners" ThisKey="id_education" OtherKey="id_education" Type="education_foreigners" />
+    </Type>
+  </Table>
+  <Table Name="dbo.education_foreigners" Member="education_foreigners">
+    <Type Name="education_foreigners">
+      <Column Name="id_education_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_education" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="education_education_foreigners" Member="education" ThisKey="id_education" OtherKey="id_education" Type="education" IsForeignKey="true" />
+      <Association Name="foreigners_education_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.embassy" Member="embassy">
+    <Type Name="embassy">
+      <Column Name="id_embassy" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_embassy" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="embassy_workplace" Member="workplace" ThisKey="id_embassy" OtherKey="embassyid_embassy" Type="workplace" />
+    </Type>
+  </Table>
+  <Table Name="dbo.files" Member="files">
+    <Type Name="files">
+      <Column Name="id_file" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="documents" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="meta_data" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="files_files_foreigners" Member="files_foreigners" ThisKey="id_file" OtherKey="id_file" Type="files_foreigners" />
+    </Type>
+  </Table>
+  <Table Name="dbo.files_foreigners" Member="files_foreigners">
+    <Type Name="files_foreigners">
+      <Column Name="id_files_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_file" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="files_files_foreigners" Member="files" ThisKey="id_file" OtherKey="id_file" Type="files" IsForeignKey="true" />
+      <Association Name="foreigners_files_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.foreigners" Member="foreigners">
+    <Type Name="foreigners">
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_foreigner" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="birth_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="blood_tipe" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="[weight(kg)]" Member="weight_kg_" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="health" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="marital_status" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="number_of_children" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="national_day" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="criminal_prosecution_in_the_country_of_permanent_residence" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="participant_in_military_conflicts" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="remarks" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="nationalityid_nationality" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="genderid_gender" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="identity_documentid_document" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="foreigners_workplace_foreigners" Member="workplace_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="workplace_foreigners" />
+      <Association Name="foreigners_arrival_foreigners" Member="arrival_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="arrival_foreigners" />
+      <Association Name="foreigners_education_foreigners" Member="education_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="education_foreigners" />
+      <Association Name="foreigners_files_foreigners" Member="files_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="files_foreigners" />
+      <Association Name="foreigners_hobby_foreigners" Member="hobby_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="hobby_foreigners" />
+      <Association Name="foreigners_identity_document" Member="identity_document" ThisKey="id_foreigner" OtherKey="foreignersid_foreigner" Type="identity_document" />
+      <Association Name="foreigners_languages_foreigners" Member="languages_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="languages_foreigners" />
+      <Association Name="foreigners_project_foreigners" Member="project_foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="project_foreigners" />
+      <Association Name="gender_foreigners" Member="gender" ThisKey="genderid_gender" OtherKey="id_gender" Type="gender" IsForeignKey="true" />
+      <Association Name="nationality_foreigners" Member="nationality" ThisKey="nationalityid_nationality" OtherKey="id_nationality" Type="nationality" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.gender" Member="gender">
+    <Type Name="gender">
+      <Column Name="id_gender" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_gender" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="gender_foreigners" Member="foreigners" ThisKey="id_gender" OtherKey="genderid_gender" Type="foreigners" />
+    </Type>
+  </Table>
+  <Table Name="dbo.hobby" Member="hobby">
+    <Type Name="hobby">
+      <Column Name="id_hobby" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_hobby" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="hobby_hobby_foreigners" Member="hobby_foreigners" ThisKey="id_hobby" OtherKey="id_hobby" Type="hobby_foreigners" />
+    </Type>
+  </Table>
+  <Table Name="dbo.hobby_foreigners" Member="hobby_foreigners">
+    <Type Name="hobby_foreigners">
+      <Column Name="id_hobby_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_hobby" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="hobby_hobby_foreigners" Member="hobby" ThisKey="id_hobby" OtherKey="id_hobby" Type="hobby" IsForeignKey="true" />
+      <Association Name="foreigners_hobby_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.host_country" Member="host_country">
+    <Type Name="host_country">
+      <Column Name="id_host_country" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_country" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="host_country_arrival" Member="arrival" ThisKey="id_host_country" OtherKey="host_countryid_host_country" Type="arrival" />
+    </Type>
+  </Table>
+  <Table Name="dbo.identity_document" Member="identity_document">
+    <Type Name="identity_document">
+      <Column Name="id_document" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="date_of_issue" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="validity_period" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="serial_number_of_document" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="foreignersid_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="document_typeid_doctype" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="foreigners_identity_document" Member="foreigners" ThisKey="foreignersid_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+      <Association Name="document_type_identity_document" Member="document_type" ThisKey="document_typeid_doctype" OtherKey="id_doctype" Type="document_type" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.languages" Member="languages">
+    <Type Name="languages">
+      <Column Name="id_language" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_language" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="languages_languages_foreigners" Member="languages_foreigners" ThisKey="id_language" OtherKey="id_language" Type="languages_foreigners" />
+    </Type>
+  </Table>
+  <Table Name="dbo.languages_foreigners" Member="languages_foreigners">
+    <Type Name="languages_foreigners">
+      <Column Name="id_languages_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_language" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="languages_languages_foreigners" Member="languages" ThisKey="id_language" OtherKey="id_language" Type="languages" IsForeignKey="true" />
+      <Association Name="foreigners_languages_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.nationality" Member="nationality">
+    <Type Name="nationality">
+      <Column Name="id_nationality" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_nationality" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="nationality_foreigners" Member="foreigners" ThisKey="id_nationality" OtherKey="nationalityid_nationality" Type="foreigners" />
+    </Type>
+  </Table>
+  <Table Name="dbo.project" Member="project">
+    <Type Name="project">
+      <Column Name="id_project" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_project" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="[nature/description_of_project]" Member="nature_description_of_project" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="project_details" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="id_workplace" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="project_project_foreigners" Member="project_foreigners" ThisKey="id_project" OtherKey="id_project" Type="project_foreigners" />
+      <Association Name="workplace_project" Member="workplace" ThisKey="id_workplace" OtherKey="id_workplace" Type="workplace" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.project_foreigners" Member="project_foreigners">
+    <Type Name="project_foreigners">
+      <Column Name="id_project_foreigners" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_project" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_foreigner" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="foreigners_project_foreigners" Member="foreigners" ThisKey="id_foreigner" OtherKey="id_foreigner" Type="foreigners" IsForeignKey="true" />
+      <Association Name="project_project_foreigners" Member="project" ThisKey="id_project" OtherKey="id_project" Type="project" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.purpose" Member="purpose">
+    <Type Name="purpose">
+      <Column Name="id_purpose" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_purpose" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="purpose_arrival" Member="arrival" ThisKey="id_purpose" OtherKey="purposeid_purpose" Type="arrival" />
+    </Type>
+  </Table>
+  <Table Name="dbo.workplace" Member="workplace">
+    <Type Name="workplace">
+      <Column Name="id_workplace" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name_of_company" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="[division/department/direction]" Member="division_department_direction" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="position" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="military_rank" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="office_hours" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="[number/fax]" Member="number_fax" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="email" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="residential_address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="id_arrival" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="embassyid_embassy" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="workplace_workplace_foreigners" Member="workplace_foreigners" ThisKey="id_workplace" OtherKey="id_workplace" Type="workplace_foreigners" />
+      <Association Name="workplace_project" Member="project" ThisKey="id_workplace" OtherKey="id_workplace" Type="project" />
+      <Association Name="embassy_workplace" Member="embassy" ThisKey="embassyid_embassy" OtherKey="id_embassy" Type="embassy" IsForeignKey="true" />
+      <Association Name="arrival_workplace" Member="arrival" ThisKey="id_arrival" OtherKey="id_arrival" Type="arrival" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
